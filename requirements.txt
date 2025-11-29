@@ -1,0 +1,7 @@
+# requirements.txt
+scikit-learn
+pandas
+shap
+lime
+fastapi
+uvicorn
