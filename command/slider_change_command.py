@@ -1,39 +1,63 @@
 """
-Command Pattern Implementation
-Abstract base class for all undoable commands
+SliderChangeCommand - Concrete Command Implementation
+Allows undo/redo of feature slider changes in instance input
 """
 
-from abc import ABC, abstractmethod
+from typing import List
+import numpy as np
+from .command import Command
 
 
-class Command(ABC):
+class SliderChangeCommand(Command):
     """
-    Command Pattern Interface: Define interface for undoable operations.
+    Concrete Command: Allows undo/redo of feature slider changes.
     
-    This abstract class ensures that all command implementations provide
-    both execute() and undo() methods, enabling full undo/redo functionality.
+    This command encapsulates a change to a feature value via a slider,
+    storing both the old and new values to enable undo/redo operations.
     
     Responsibilities:
-    - Define executable operation
-    - Define undoable operation
-    - Ensure consistent command interface
+    - Change feature value
+    - Undo/restore feature value
+    - Track state changes
     """
     
-    @abstractmethod
+    def __init__(self, instance: List[float], feature_index: int, 
+                 old_val: float, new_val: float, callback=None):
+        """
+        Initialize the slider change command
+        
+        Args:
+            instance: The instance array to modify
+            feature_index: Index of the feature to change
+            old_val: Previous value of the feature
+            new_val: New value to set
+            callback: Optional callback function to call after execute/undo
+        """
+        self.instance = instance
+        self.feature_index = feature_index
+        self.old_val = old_val
+        self.new_val = new_val
+        self.callback = callback
+    
     def execute(self) -> None:
         """
-        Execute the command
-        
-        This method performs the primary action of the command.
+        Execute the slider change by setting the new value
         """
-        pass
+        self.instance[self.feature_index] = self.new_val
+        
+        if self.callback:
+            self.callback()
     
-    @abstractmethod
     def undo(self) -> None:
         """
-        Undo the command
-        
-        This method reverses the action performed by execute(),
-        restoring the previous state.
+        Undo the slider change by restoring the old value
         """
-        pass
+        self.instance[self.feature_index] = self.old_val
+        
+        if self.callback:
+            self.callback()
+    
+    def __str__(self) -> str:
+        """String representation for debugging"""
+        return (f"SliderChangeCommand(feature={self.feature_index}, "
+                f"old={self.old_val:.2f}, new={self.new_val:.2f})")
