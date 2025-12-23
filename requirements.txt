@@ -1,0 +1,11 @@
+# Python 3.8+
+
+numpy>=1.21.0
+scikit-learn>=1.0.0
+
+matplotlib>=3.4.0
+
+shap>=0.41.0
+lime>=0.2.0
+
+joblib>=1.0.0
